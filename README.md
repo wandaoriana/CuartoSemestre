@@ -1,4 +1,4 @@
-# 📚 Repositorio de Trabajos Prácticos – Wanda Lanatta (@wandaoriana)
+# 📚 Repositorio de Programación - Cuarto Semestre 
 
 Repositorio de trabajos prácticos realizados por **Wanda Lanatta** (@wandaoriana) durante el **primer y segundo cuatrimestre** del año **2025**, en el marco de la **Tecnicatura Universitaria en Programación** de la **Universidad Tecnológica Nacional (UTN)**.
 
