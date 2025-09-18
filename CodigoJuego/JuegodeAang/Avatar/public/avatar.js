@@ -1,215 +1,342 @@
-let ataqueJugador;
-let ataqueEnemigo;
-let vidaJugador = 3;
-let vidaEnemigo = 3;
+    let avatares = [];
 
-function seleccionarPersonajeJugador() {
-    let zuko = document.getElementById('zuko');
-    let katara = document.getElementById('katara');
-    let aang = document.getElementById('aang');
-    let toph = document.getElementById('toph');
-    let spanPersonajeJugador = document.getElementById('personaje-jugador');
-    let sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque');
-    let sectionSeleccionarPersonaje = document.getElementById('seleccionar-personaje');
-
-    if (zuko.checked) {
-        spanPersonajeJugador.innerHTML = 'Zuko';
-    } else if (katara.checked) {
-        spanPersonajeJugador.innerHTML = 'Katara';
-    } else if (aang.checked) {
-        spanPersonajeJugador.innerHTML = 'Aang';
-    } else if (toph.checked) {
-        spanPersonajeJugador.innerHTML = 'Toph';
-    } else {
-        // Mostrar mensaje visual en lugar de alert
-        let mensajeError = document.createElement("p");
-        mensajeError.innerHTML = 'Por favor, selecciona un personaje☝️';
-        mensajeError.style.color = "red";
-        sectionSeleccionarPersonaje.appendChild(mensajeError);
-
-        setTimeout(() => {
-            sectionSeleccionarPersonaje.removeChild(mensajeError);
-        }, 2000);
-        return; // <== importante: corta la función antes de seguir
+    // CLASE PERSONAJE
+    class Personaje {
+    constructor(nombre, imagen) {
+    this.nombre = nombre;
+    this.imagen = imagen;
+    this.vida = 3;
     }
 
-    // Solo se ejecuta si la selección fue válida
-    sectionSeleccionarAtaque.style.display = 'block';
-    sectionSeleccionarPersonaje.style.display = 'none';
-    seleccionarPersonajeEnemigo();
-}
+    atacar() {
+    const ataques = ["Puño 🤜🏻", "Patada 🦵🏻", "Barrida 🦶🏻"];
+    return ataques[Math.floor(Math.random() * ataques.length)];
+    }
+    }
 
-function iniciarJuego() {
-    let sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque')
-    sectionSeleccionarAtaque.style.display = 'none';
+    // CLASE JUEGO
+    class Juego {
+    constructor() {
+    this.personajesDisponibles = [];
+    this.jugador = null;
+    this.enemigo = null;
+    this.ataqueJugador = "";
+    this.ataqueEnemigo = "";
 
-    let sectionReiniciar = document.getElementById('reiniciar');
-    sectionReiniciar.style.display = 'none';
+    // Referencias a elementos DOM
+    this.sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque');
+    this.sectionSeleccionarPersonaje = document.getElementById('seleccionar-personaje');
+    this.sectionReiniciar = document.getElementById('reiniciar');
+    this.sectionMensajes = document.getElementById('mensajes');
 
-    let sectionMensajes = document.getElementById('mensajes')
-    sectionMensajes.style.display = 'none';
+    this.spanPersonajeJugador = document.getElementById('personaje-jugador');
+    this.spanPersonajeEnemigo = document.getElementById('personaje-enemigo');
+    this.spanVidasJugador = document.getElementById('vida-jugador');
+    this.spanVidasEnemigo = document.getElementById('vida-enemigo');
 
-    let botonPersonajeJugador = document.getElementById('boton-personaje');
-    // Agregar un evento al botón de seleccionar personaje
-    botonPersonajeJugador.addEventListener('click', seleccionarPersonajeJugador);
+    this.botonPersonajeJugador = document.getElementById('boton-personaje');
+    this.botonPunio = document.getElementById("boton-punio");
+    this.botonPatada = document.getElementById("boton-patada");
+    this.botonBarrida = document.getElementById("boton-barrida");
+    this.botonReiniciar = document.getElementById('boton-reiniciar');
+    this.botonReglas = document.getElementById('boton-reglas');
+    this.botonCerrarReglas = document.getElementById('cerrar-reglas');
+    this.modalReglas = document.getElementById('modal-reglas');
+    }
 
-    let botonPunio = document.getElementById("boton-punio");
-    botonPunio.addEventListener("click", ataquePunio);
-    let botonPatada = document.getElementById("boton-patada");
-    botonPatada.addEventListener("click", ataquePatada);
-    let botonBarrida = document.getElementById("boton-barrida");
-    botonBarrida.addEventListener("click", ataqueBarrida);
+    iniciar() {
+    this.inicializarPersonajes();
+    this.mostrarPersonajesEnPantalla();
+    console.log("Personajes disponibles:", this.personajesDisponibles.map(p => p.nombre));
+    this.configurarEventListeners();
+    this.ocultarSecciones();
+    }
 
-    let botonReiniciar = document.getElementById('boton-reiniciar');
-    botonReiniciar.addEventListener('click', reiniciarJuego);
-    
-    document.getElementById('boton-reglas').addEventListener('click', mostrarReglas);
-    document.getElementById('cerrar-reglas').addEventListener('click', cerrarReglas);
-    
-    // Cierra el modal al hacer clic fuera del contenido
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('modal-reglas');
-        if (event.target === modal) {
-            modal.style.display = 'none';
+    inicializarPersonajes() {
+    let iroh = new Personaje("Iroh", "assets/Iroh.png");
+    let bumi = new Personaje("Bumi", "assets/Bumi.png");
+    let azula = new Personaje("Azula", "assets/Azula.png")
+    let zuko = new Personaje("Zuko", "assets/Zuko.jpg");
+    let katara = new Personaje("Katara", "assets/Katara.jpg");
+    let aang = new Personaje("Aang", "assets/Aang.jpg");
+    let toph = new Personaje("Toph", "assets/Toph.jpg");
+    let sokka = new Personaje("Sokka", "assets/Sokka.png");
+
+    avatares.push(zuko, katara, aang, toph, sokka, iroh, bumi, azula);
+    console.log(avatares);
+
+    //avatares.pop()
+    //console.log(avatares);
+    console.log(avatares.length);
+
+    /*this.personajes = [
+        new Personaje("Zuko", "assets/Zuko.jpg"),
+        new Personaje("Katara", "assets/Katara.jpg"),
+        new Personaje("Aang", "assets/Aang.jpg"),
+        new Personaje("Toph", "assets/Toph.jpg"),
+        new Personaje("Sokka", "assets/Sokka.jpg"),  // Nuevo personaje
+        new Personaje("Iroh", "assets/Iroh.jpg")     // Nuevo personaje
+    ];*/
+    }
+
+    configurarEventListeners() {
+    this.botonPersonajeJugador.addEventListener('click', () => this.seleccionarPersonajeJugador());
+    this.botonPunio.addEventListener("click", () => this.elegirAtaque("Puño 🤜🏻"));
+    this.botonPatada.addEventListener("click", () => this.elegirAtaque("Patada 🦵🏻"));
+    this.botonBarrida.addEventListener("click", () => this.elegirAtaque("Barrida 🦶🏻"));
+    this.botonReiniciar.addEventListener('click', () => this.reiniciar());
+    this.botonReglas.addEventListener('click', () => this.mostrarReglas());
+    this.botonCerrarReglas.addEventListener('click', () => this.cerrarReglas());
+
+    window.addEventListener('click', (event) => {
+        if (event.target === this.modalReglas) {
+            this.modalReglas.style.display = 'none';
         }
     });
-}
-
-function seleccionarPersonajeEnemigo() {
-    let personajes = ["Zuko", "Katara", "Aang", "Toph"];
-    let personajeAleatorio =
-    personajes[Math.floor(Math.random() * personajes.length)];
-    let spanPersonajeEnemigo = document.getElementById("personaje-enemigo");
-    spanPersonajeEnemigo.innerHTML = personajeAleatorio;
-}
-
-function ataquePunio() {
-    ataqueJugador = " Puño 🤜🏻 "
-    ataqueAleatorioEnemigo()
-}
-
-function ataquePatada() {
-    ataqueJugador = " Patada 🦵🏻"
-    ataqueAleatorioEnemigo()
-}
-
-function ataqueBarrida() {
-    ataqueJugador = " Barrida 🦶🏻 "
-    ataqueAleatorioEnemigo()
-}
-
-function ataqueAleatorioEnemigo() {
-    let ataqueAleatorio = Math.floor(Math.random() * 3);
-    if (ataqueAleatorio == 0){
-        ataqueEnemigo = " Puño 🤜🏻 "
-    } else if (ataqueAleatorio == 1){
-        ataqueEnemigo = " Patada 🦵🏻"
-    } else {
-        ataqueEnemigo = " Barrida 🦶🏻 "
     }
 
-    combate()
-}
+    ocultarSecciones() {
+    this.sectionSeleccionarAtaque.style.display = 'none';
+    this.sectionReiniciar.style.display = 'none';
+    this.sectionMensajes.style.display = 'none';
+    }
 
-function combate() {
-    let sectionMensajes = document.getElementById('mensajes')
-    sectionMensajes.style.display = 'block';
+    seleccionarPersonajeJugador() {
+    const personajeSeleccionado = document.querySelector('input[name="personaje"]:checked');
 
-    let spanVidasJugador = document.getElementById('vida-jugador');
-    let spanVidasEnemigo = document.getElementById('vida-enemigo');
+    if (!personajeSeleccionado) {
+        this.mostrarMensajeError('Por favor, selecciona un personaje☝️');
+        return;
+    }
 
-    if (ataqueEnemigo === ataqueJugador) {
-        crearMensaje("EMPATE");
+    const idPersonaje = personajeSeleccionado.id;
+    this.jugador = this.personajesDisponibles.find(p => p.nombre.toLowerCase() === idPersonaje);
+
+    this.spanPersonajeJugador.innerHTML = this.jugador.nombre;
+    this.sectionSeleccionarAtaque.style.display = 'block';
+    this.sectionSeleccionarPersonaje.style.display = 'none';
+
+    this.seleccionarPersonajeEnemigo();
+
+    const visualJugador = document.getElementById('jugador-visual');
+    visualJugador.innerHTML = `<img src="${this.jugador.imagen}" alt="${this.jugador.nombre}">`;
+    visualJugador.classList.remove('aparecer');
+    setTimeout(() => {
+    visualJugador.classList.add('aparecer');
+    }, 100);
+    }
+
+    mostrarMensajeError(mensaje) {
+    let mensajeError = document.createElement("p");
+    mensajeError.innerHTML = mensaje;
+    mensajeError.style.color = "red";
+    this.sectionSeleccionarPersonaje.appendChild(mensajeError);
+
+    setTimeout(() => {
+        this.sectionSeleccionarPersonaje.removeChild(mensajeError);
+    }, 2000);
+    }
+
+    seleccionarPersonajeEnemigo() {
+    const personajesDisponibles = this.personajesDisponibles.filter(p => p.nombre !== this.jugador.nombre);
+    const indiceAleatorio = Math.floor(Math.random() * personajesDisponibles.length);
+    this.enemigo = personajesDisponibles[indiceAleatorio];
+
+    this.spanPersonajeEnemigo.innerHTML = this.enemigo.nombre;
+    this.actualizarVidasEnDOM();
+
+    const visualEnemigo = document.getElementById('enemigo-visual');
+    visualEnemigo.innerHTML = `<img src="${this.enemigo.imagen}" alt="${this.enemigo.nombre}">`;
+    visualEnemigo.classList.remove('aparecer');
+    setTimeout(() => {
+    visualEnemigo.classList.add('aparecer');
+    }, 100);
+    }
+
+    elegirAtaque(ataque) {
+    this.ataqueJugador = ataque;
+    this.ataqueEnemigo = this.enemigo.atacar();
+    this.combate();
+    }
+
+    combate() {
+    this.sectionMensajes.style.display = 'block';
+
+    // Determinar resultado
+    let resultado = this.determinarResultado();
+    this.crearMensaje(resultado.mensaje);
+
+    // Actualizar vidas
+    if (resultado.ganador === "jugador") {
+        this.enemigo.vida--;
+    } else if (resultado.ganador === "enemigo") {
+        this.jugador.vida--;
+    }
+
+    this.actualizarVidasEnDOM();
+    this.revisarVidas();
+    this.mostrarEmojiResultado(resultado.ganador);
+    }
+
+    determinarResultado() {
+    if (this.ataqueEnemigo === this.ataqueJugador) {
+        return { mensaje: "EMPATE", ganador: null };
     } else if (
-        (ataqueJugador === " Puño 🤜🏻 " && ataqueEnemigo === " Barrida 🦶🏻 ") ||
-        (ataqueJugador === " Patada 🦵🏻" && ataqueEnemigo === " Puño 🤜🏻 ") ||
-        (ataqueJugador === " Barrida 🦶🏻 " && ataqueEnemigo === " Patada 🦵🏻")
+        (this.ataqueJugador === "Puño 🤜🏻" && this.ataqueEnemigo === "Barrida 🦶🏻") ||
+        (this.ataqueJugador === "Patada 🦵🏻" && this.ataqueEnemigo === "Puño 🤜🏻") ||
+        (this.ataqueJugador === "Barrida 🦶🏻" && this.ataqueEnemigo === "Patada 🦵🏻")
     ) {
-        crearMensaje("GANASTE");
-        vidaEnemigo--; // Resta una vida al enemigo
-        spanVidasEnemigo.innerHTML = vidaEnemigo; // Actualiza el DOM
+        return { mensaje: "GANASTE", ganador: "jugador" };
     } else {
-        crearMensaje("PERDISTE");
-        vidaJugador--; // Resta una vida al jugador
-        spanVidasJugador.innerHTML = vidaJugador;
+        return { mensaje: "PERDISTE", ganador: "enemigo" };
+    }
     }
 
-    revisarVidas(); // Verifica si alguien ganó o perdió
-}
-
-function revisarVidas(){
-    if(vidaEnemigo == 0){
-        //Ganamos
-        crearMensajeFinal("Felicidades, ganaste el juego! 🤩🥳🎉")
-    } else if(vidaJugador == 0){
-        //Perdimos
-        crearMensajeFinal("Perdiste, Mejor suerte la próxima vez! 😢😭😭😭");
+    actualizarVidasEnDOM() {
+    this.spanVidasJugador.innerHTML = this.jugador.vida;
+    this.spanVidasEnemigo.innerHTML = this.enemigo.vida;
     }
-}
 
-function crearMensaje(resultado) {
-    let mensajes = document.querySelector('#mensajes p'); //querySelector selecciona un solo elemento del DOM y '#mensajes p' selecciona el elemento con id="mensajes"
+    revisarVidas() {
+    if (this.enemigo.vida === 0) {
+    // Agregar efectos visuales para el ganador (jugador)
+    this.destacarGanador("jugador");
+    this.crearMensajeFinal("🎉 Felicidades, ganaste el juego!");
+    } else if (this.jugador.vida === 0) {
+    // Agregar efectos visuales para el ganador (enemigo)
+    this.destacarGanador("enemigo");
+    this.crearMensajeFinal("😢 Perdiste, mejor suerte la próxima vez!");
+    }
+    }
+    crearMensaje(resultado) {
+    let mensajes = document.querySelector('#mensajes p');
+    mensajes.innerHTML += `<br>Tu personaje lanzó ${this.ataqueJugador} y el enemigo lanzó ${this.ataqueEnemigo}: ${resultado}`;
+    }
 
-    mensajes.innerHTML += `<br>Tu personaje lanzó ${ataqueJugador} y el enemigo lanzó ${ataqueEnemigo}: ${resultado}`;
-}
-
-function crearMensajeFinal(resultadoFinal) {
+    crearMensajeFinal(resultadoFinal) {
     let mensajes = document.querySelector('#mensajes p');
     mensajes.innerHTML = resultadoFinal;
 
-    // Deshabilitar botones de ataque tras terminar el juego
-    document.getElementById("boton-punio").disabled = true;
-    document.getElementById("boton-patada").disabled = true;
-    document.getElementById("boton-barrida").disabled = true;
+    this.botonPunio.disabled = true;
+    this.botonPatada.disabled = true;
+    this.botonBarrida.disabled = true;
 
-    let sectionReiniciar = document.getElementById('reiniciar');
-    sectionReiniciar.style.display = 'block';
+    this.sectionReiniciar.style.display = 'block';
+    }
 
-}
+    reiniciar() {
+    // Vidas de los personajes
+    this.personajesDisponibles.forEach(personaje => {
+        personaje.vida = 3;
+    });
 
-function reiniciarJuego() {
-    // Reiniciar las vidas a 3
-    vidaJugador = 3;
-    vidaEnemigo = 3;
+    this.jugador = null;
+    this.enemigo = null;
 
-    // Reiniciar los textos de vidas en el DOM
-    document.getElementById('vida-jugador').innerHTML = vidaJugador;
-    document.getElementById('vida-enemigo').innerHTML = vidaEnemigo;
+    this.spanVidasJugador.innerHTML = "3";
+    this.spanVidasEnemigo.innerHTML = "3";
 
-    // Vaciar los mensajes
+    this.spanPersonajeJugador.innerHTML = "";
+    this.spanPersonajeEnemigo.innerHTML = "";
+
     let mensajes = document.querySelector('#mensajes p');
     mensajes.innerHTML = "";
 
-    // Resetear la selección de personajes
-    document.getElementById('personaje-jugador').innerHTML = "";
-    document.getElementById('personaje-enemigo').innerHTML = "";
-
     document.querySelectorAll('input[type="radio"]').forEach(input => {
         input.checked = false;
-        input.disabled = false; // Asegura que estén habilitados
     });
 
-    // Habilitar los botones de ataque
-    document.getElementById("boton-punio").disabled = false;
-    document.getElementById("boton-patada").disabled = false;
-    document.getElementById("boton-barrida").disabled = false;
+    // Eliminar efectos visuales de ganador
+    const visualJugador = document.getElementById('jugador-visual');
+    const visualEnemigo = document.getElementById('enemigo-visual');
+    visualJugador.classList.remove("ganador-efecto-brillo");
+    visualEnemigo.classList.remove("ganador-efecto-brillo");
 
-    alert("Juego reiniciado. Selecciona nuevamente tu personaje.");
-    let sectionSeleccionarPersonaje = document.getElementById('seleccionar-personaje');
-    sectionSeleccionarPersonaje.style.display = 'block'
-    iniciarJuego();
+    // Quitar emojis animados
+    visualJugador.querySelectorAll('.emoji-resultado').forEach(e => e.classList.remove("ganador-emoji"));
+    visualEnemigo.querySelectorAll('.emoji-resultado').forEach(e => e.classList.remove("ganador-emoji"));
+
+    this.botonPunio.disabled = false;
+    this.botonPatada.disabled = false;
+    this.botonBarrida.disabled = false;
+
+    this.sectionSeleccionarPersonaje.style.display = 'block';
+    this.sectionSeleccionarAtaque.style.display = 'none';
+    this.sectionReiniciar.style.display = 'none';
+    this.sectionMensajes.style.display = 'none';
     }
 
-function mostrarReglas(){
-        const modal = document.getElementById('modal-reglas');
-        modal.style.display = 'flex';
+    mostrarReglas() {
+    this.modalReglas.style.display = 'flex';
     }
-    
-function cerrarReglas(){
-        const modal = document.getElementById('modal-reglas');
-        modal.style.display = 'none';
-    }
-    
 
-// Iniciar el juego cuando la página haya cargado
-window.addEventListener('load', iniciarJuego);
+    cerrarReglas() {
+    this.modalReglas.style.display = 'none';
+    }
+
+    mostrarPersonajesEnPantalla() {
+    const contenedor = document.getElementById('personajes-container');
+    contenedor.innerHTML = "";
+
+    avatares.forEach(personaje => {
+    const divPersonaje = document.createElement('div');
+    divPersonaje.classList.add('personaje');
+
+    divPersonaje.innerHTML = `
+        <img src="${personaje.imagen}" alt="${personaje.nombre}">
+        <br>
+        <input type="radio" name="personaje" id="${personaje.nombre.toLowerCase()}">
+        <label for="${personaje.nombre.toLowerCase()}">${personaje.nombre}</label>
+    `;
+
+    contenedor.appendChild(divPersonaje);
+    this.personajesDisponibles.push(personaje); // también lo agregás al juego
+    });
+    }
+
+    destacarGanador(ganador) {
+    const visualJugador = document.getElementById('jugador-visual');
+    const visualEnemigo = document.getElementById('enemigo-visual');
+
+    if (ganador === "jugador") {
+    // Agregar brillo y animación al jugador
+    visualJugador.classList.add("ganador-efecto-brillo");
+    visualJugador.querySelector('.emoji-resultado').classList.add("ganador-emoji");
+    } else if (ganador === "enemigo") {
+    // Agregar brillo y animación al enemigo
+    visualEnemigo.classList.add("ganador-efecto-brillo");
+    visualEnemigo.querySelector('.emoji-resultado').classList.add("ganador-emoji");
+    }
+    }
+
+    mostrarEmojiResultado(ganador) {
+    const visualJugador = document.getElementById('jugador-visual');
+    const visualEnemigo = document.getElementById('enemigo-visual');
+
+    // Limpiar emojis anteriores
+    visualJugador.querySelectorAll('.emoji-resultado').forEach(e => e.remove());
+    visualEnemigo.querySelectorAll('.emoji-resultado').forEach(e => e.remove());
+
+    // Mostrar emoji según quién ganó
+    if (ganador === "jugador") {
+        visualJugador.innerHTML += `<div class="emoji-resultado">🏆</div>`;
+    } else if (ganador === "enemigo") {
+        visualEnemigo.innerHTML += `<div class="emoji-resultado">🏆</div>`;
+    } else if (ganador === null) {
+        // Empate: no mostrar nada
+    }
+
+    // Mostrar emoji de derrota
+    if (ganador === "enemigo") {
+        visualJugador.innerHTML += `<div class="emoji-resultado">💔</div>`;
+    } else if (ganador === "jugador") {
+        visualEnemigo.innerHTML += `<div class="emoji-resultado">💔</div>`;
+    }
+    }
+    }
+
+    // Iniciar el juego
+    window.addEventListener('load', () => {
+    const juego = new Juego();
+    juego.iniciar();
+    });
