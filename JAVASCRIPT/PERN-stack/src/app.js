@@ -4,17 +4,15 @@ import tareasRoutes from "./router/tareas.routes.js";
 import authRoutes from "./router/auth.routes.js";
 
 const app = express();
-//middlewares
+//Middlewares
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => res.json({message: "Bienvenidos a mi proyecto"}));
+app.get("/", (req, res) => res.json({ message: "Bienvenidos a mi proyecto" }));
+app.use("/api/tareas", tareasRoutes);
 
-app.use('/api',tareasRoutes);
-app.use('/api',authRoutes);
-
-//manejo de errores
+//Manejando errores
 app.use((err, req, res, next) => {
     res.status(500).json({
         status: "error",

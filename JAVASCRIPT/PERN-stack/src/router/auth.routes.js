@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { singin,singup, singout, profile } from "../controllers/auth.controller.js";
+import { signin, signup, signout, profile } from "../controllers/auth.controller.js";
 
 const router = Router();
 
-router.post("/singin", singin);
+router.post("/signin", signin);
 
-router.post("/singup", singup);
+router.post("/signup", signup);
 
-router.post("/singout", singout);
+router.post("/signout", signout);
 
 router.get("/profile", profile);
 

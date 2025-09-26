@@ -3,14 +3,14 @@ import { actualizarTarea, crearTarea, eliminarTarea, listarTarea, listarTareas }
 
 const router = Router();
 
-router.get('/tareas', listarTareas);
+router.get("/", listarTareas);
 
-router.get('/tareas/:id', listarTarea);
+router.get("/:id", listarTarea);
 
-router.post('/tareas', crearTarea);
+router.post("/", crearTarea);
 
-router.put('/tareas/:id', actualizarTarea);
+router.put("/:id", actualizarTarea);
 
-router.delete('/tareas/:id', eliminarTarea);
+router.delete("/:id", eliminarTarea);
 
 export default router;
