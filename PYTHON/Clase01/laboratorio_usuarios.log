@@ -1,0 +1,7 @@
+04:36:31 PM: ERROR [conexion.py:29] Error al crear el pool: connection to server at "localhost" (::1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+04:37:06 PM: ERROR [conexion.py:29] Error al crear el pool: connection to server at "localhost" (::1), port 5433 failed: FATAL:  password authentication failed for user "postgres"
+
