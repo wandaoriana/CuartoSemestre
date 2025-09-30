@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "estudiantes1")
+@Table(name = "Estudiantes2025")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +15,7 @@ public class Estudiantes1 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_estudiante")   // coincide con la columna de la DB
+    @Column(name = "id_estudiantes2025")   // coincide con la columna de la DB
     private Integer idEstudiante;
 
     private String nombre;
